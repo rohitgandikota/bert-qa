@@ -51,3 +51,18 @@ else:
 print("\nQuestion:\n{}".format(question.capitalize()))
 print("\nAnswer:\n{}.".format(answer.capitalize()))
 ```
+
+Below is an example of the model when asked a question based on the context provided. 
+```
+Context:
+KOMPSAT-3 is a high performance remote sensing satellite, which provides 0.7 m GSD
+panchromatic image and 2.8 m GSD multi-spectral image data for various applications.
+KOMPSAT-3 was launched into a sun synchronous low Earth orbit on the 18th of May, 2012
+and the life time of more than 7 years is expected.
+
+Question:
+What is life expectancy of kompsat-3?
+
+Answer:
+More than 7 years.
+```
