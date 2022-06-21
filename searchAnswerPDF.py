@@ -10,6 +10,8 @@ from transformers import BertForQuestionAnswering
 from transformers import BertTokenizer
 import PyPDF2
 import os
+os.environ["https_proxy"] = "http://radhakrishna_k:Iamthegod1$@proxy6.nrsc.gov.in:8080"
+os.environ["http_proxy"] = "http://radhakrishna_k:Iamthegod1$@proxy6.nrsc.gov.in:8080"
 #%% Run the code below [ONLY ONCE] when running the code for the first time ever
 # Downloading tokenizer file for model using python as file is huge
 '''
@@ -32,12 +34,15 @@ with open(f'D:\\Projects\\bhoonidhi\\bert-large-uncased-whole-word-masking-finet
 #%% Defining function for pdf search
 def findAnswerPDF(question,pdf_path,model_path=None):
     def find_factors(x):
-        factor = len(x)
-        for i in range(1, len(x) + 1):
-            if len(x) % i == 0:
+        x = x-1
+        factor = x
+        for i in range(1, x + 1):
+            if x % i == 0:
                 if not i > 512:
                     factor = i
-        return factor
+        if factor == 1:
+            factor=find_factors(x)
+        return factor, x
     answer = ''
     # Import Model and tokenizer
     if model_path:
@@ -51,18 +56,24 @@ def findAnswerPDF(question,pdf_path,model_path=None):
     pdfReader = PyPDF2.PdfFileReader(pdfFileObject)
     count = pdfReader.numPages
     text = ''
+    # Search for the question in each page due to the 512 token size limit of BERT
     for num in range(count):
         if len(answer)>0:
             break
         print(f'Searching Page {num+1}/{count}')
         page = pdfReader.getPage(num)
         temp = page.extractText()
-        if len(temp) > 50:
+        if len(temp.replace('.','').replace('\n','')) > 50:
+            # Clean the text from PDF
             text=temp.strip()
             text = text.replace('\n','')
+            # If index page, we get too many fullstops. Skip such pages
+            if text.count('.')/len(text) > .25:
+                continue
+            
             # Convert the tokens to ids using encode function of tokenizer
             input_ids = tokenizer.encode(question, text)
-            print("The input has a total of {} tokens.".format(len(input_ids)))
+            #print("The input has a total of {} tokens.".format(len(input_ids)))
             tokens = tokenizer.convert_ids_to_tokens(input_ids)
             # Print for Information
             '''
@@ -71,7 +82,15 @@ def findAnswerPDF(question,pdf_path,model_path=None):
             '''
             # Split the tokens into hal        
             if len(tokens) > 450:
-                factor = find_factors(tokens)
+                factor, len_ = find_factors(len(tokens))
+                temp = list(tokens[:len_-1])
+                temp.append(tokens[-1])
+                tokens=temp
+                del(temp)
+                temp = list(input_ids[:len_-1])
+                temp.append(input_ids[-1])
+                input_ids=temp
+                del(temp)
                 input_ids = np.array(input_ids).reshape((-1, factor))
                 tokens = np.array(tokens).reshape((-1, factor))
             else:
@@ -88,9 +107,9 @@ def findAnswerPDF(question,pdf_path,model_path=None):
                     temp_id.extend(list(input_ids[i]))
                     temp_tok = list(tokens[0][:sep_idx+1])
                     temp_tok.extend(list(tokens[i]))
-                    if tokens[i][-1] != '[SEP]':
-                        temp_id.append(input_ids[0][sep_idx]) 
-                        temp_tok.append(tokens[0][sep_idx]) 
+                if tokens[i][-1] != '[SEP]':
+                    temp_id.append(input_ids[0][sep_idx]) 
+                    temp_tok.append(tokens[0][sep_idx]) 
 
                 #first occurence of [SEP] token to identify question
                 sep_idx = temp_id.index(tokenizer.sep_token_id)
@@ -115,7 +134,7 @@ def findAnswerPDF(question,pdf_path,model_path=None):
     return answer
 
 if __name__=='__main__':
-    question = 'What is life expectancy of kompsat-3?'
+    question = 'What is kompsat-3?'
     pdf_path='D:\\Projects\\bhoonidhi\\kompsat.pdf'
     model_path='D:\\Projects\\bhoonidhi\\'
     
@@ -123,4 +142,3 @@ if __name__=='__main__':
 
     print(f'Question : {question}')
     print(f' Answer  : {answer}')
-    
