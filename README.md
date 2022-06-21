@@ -1,7 +1,25 @@
 # NLP-based-Question-Answering-using-BERT-model-in-Hugging-Face
 This project shows the usage of hugging face framework to answer questions using a deep learning model for NLP called BERT. This work can be adopted and used in many application in NLP like smart assistant or chat-bot or smart information center. </br>
 
-The code is explained in detail below:
+| NOTE: Running the code requires a proper internet connection for downloading the model from huggingface or should manually download all the files into a folder named `bert-large-uncased-whole-word-masking-finetuned-squad` and save the folder in the working directory. Files can be found in the following [*link*](https://huggingface.co/bert-large-uncased-whole-word-masking-finetuned-squad/tree/main) |
+
+| INSTALLATIONS: Please have the following libraries installed *torch*, *transformers*,*PyPDF2*|
+
+
+To search for an answer to a question from a PDF, use the `searchAnswerPDF.py` code.
+
+To search for an answer to a question from a text, use the `searchAnswerText.py` code. 
+
+To use the `searchAnswerPDF.py`, the following parameters have to be tweeked as per your application.
+```
+# The question that you want to ask
+question = 'What is life expectancy of kompsat-3?'
+# The full path of the PDF from which you choose to take the context from
+pdf_path='D:\\Projects\\bhoonidhi\\kompsat.pdf'
+# The parent path of the working directory where the folder containing model files is present
+model_path='D:\\Projects\\bhoonidhi\\'
+```
+The code for `searchAnswerText.py` is explained in detail below:
 
 ### Importing the huggingface helpers
 ```
@@ -15,7 +33,6 @@ The above lines imports the model itself and the tokenizer algorithm
 model = BertForQuestionAnswering.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
 tokenizer = BertTokenizer.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
 ```
-Running the above code requires a proper internet connection for downloading the model from huggingface or should manually download all the files into a folder named `bert-large-uncased-whole-word-masking-finetuned-squad` and save the folder in the working directory. Files can be found in the following [*link*](https://huggingface.co/bert-large-uncased-whole-word-masking-finetuned-squad/tree/main)
 
 ### Defining question and context
 ```
