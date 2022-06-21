@@ -31,6 +31,11 @@ with open(f'D:\\Projects\\bhoonidhi\\bert-large-uncased-whole-word-masking-finet
 '''
 #%% Defining function for pdf search
 def findAnswerPDF(question,pdf_path,model_path=None):
+    if not os.path.exists(pdf_path):
+        raise Exception('PDF file does not exist!')
+    if model_path:
+        if not os.path.exists(os.path.join(model_path,'bert-large-uncased-whole-word-masking-finetuned-squad')):
+            raise Exception('Model files do not exist!')
     def find_factors(x):
         x = x-1
         factor = x
@@ -39,7 +44,7 @@ def findAnswerPDF(question,pdf_path,model_path=None):
                 if not i > 512:
                     factor = i
         if factor == 1:
-            factor=find_factors(x)
+            factor, x =find_factors(x)
         return factor, x
     answer = ''
     # Import Model and tokenizer
@@ -73,6 +78,10 @@ def findAnswerPDF(question,pdf_path,model_path=None):
             input_ids = tokenizer.encode(question, text)
             #print("The input has a total of {} tokens.".format(len(input_ids)))
             tokens = tokenizer.convert_ids_to_tokens(input_ids)
+            
+            temp = np.array(tokens)
+            if len([x for x in temp if '#' in x])/len(temp) >.5:
+                continue
             # Print for Information
             '''
             for token, id in zip(tokens, input_ids):
@@ -122,17 +131,18 @@ def findAnswerPDF(question,pdf_path,model_path=None):
                 
                 #tokens with highest start and end scores
                 answer_start = torch.argmax(output.start_logits)
-                answer_end = torch.argmax(output.end_logits)
+                answer_end = torch.argmax(output.end_logits) 
                 if answer_end >= answer_start:
                     ans = " ".join(temp_tok[answer_start:answer_end+1])
                     if '[' not in ans.capitalize().strip() and len(ans.capitalize().strip())!=0:
-                        answer+=ans.capitalize()
+                        answer+=ans.capitalize().replace(' ##','')
     if len(answer)==0:
         answer="I am unable to find the answer to this question"
     return answer
 
 if __name__=='__main__':
-    question = 'What is kompsat-3?'
+    # Direct question working properly
+    question = 'What is imaging time per day for kompsat-3 satellite?'
     pdf_path='D:\\Projects\\bhoonidhi\\kompsat.pdf'
     model_path='D:\\Projects\\bhoonidhi\\'
     
@@ -140,3 +150,14 @@ if __name__=='__main__':
 
     print(f'Question : {question}')
     print(f' Answer  : {answer}')
+    
+    # A litle indirect question working properly
+    question = 'What are orbit parameters for kompsat-3 satellite?'
+    pdf_path='D:\\Projects\\bhoonidhi\\kompsat.pdf'
+    model_path='D:\\Projects\\bhoonidhi\\'
+    
+    answer = findAnswerPDF(question,pdf_path,model_path)
+
+    print(f'Question : {question}')
+    print(f' Answer  : {answer}')
+    
