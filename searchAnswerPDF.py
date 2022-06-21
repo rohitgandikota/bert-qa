@@ -10,8 +10,6 @@ from transformers import BertForQuestionAnswering
 from transformers import BertTokenizer
 import PyPDF2
 import os
-os.environ["https_proxy"] = "http://radhakrishna_k:Iamthegod1$@proxy6.nrsc.gov.in:8080"
-os.environ["http_proxy"] = "http://radhakrishna_k:Iamthegod1$@proxy6.nrsc.gov.in:8080"
 #%% Run the code below [ONLY ONCE] when running the code for the first time ever
 # Downloading tokenizer file for model using python as file is huge
 '''
