@@ -1,9 +1,9 @@
 # NLP-based-Question-Answering-using-BERT-model-in-Hugging-Face
 This project shows the usage of hugging face framework to answer questions using a deep learning model for NLP called BERT. This work can be adopted and used in many application in NLP like smart assistant or chat-bot or smart information center. </br>
 
-| NOTE: Running the code requires a proper internet connection for downloading the model from huggingface or should manually download all the files into a folder named `bert-large-uncased-whole-word-masking-finetuned-squad` and save the folder in the working directory. Files can be found in the following [*link*](https://huggingface.co/bert-large-uncased-whole-word-masking-finetuned-squad/tree/main) |
+| NOTE: Running the code requires a proper internet connection for downloading the model from huggingface or should manually download all the files into a folder named `bert-large-uncased-whole-word-masking-finetuned-squad` and save the folder in the working directory. Files can be found in the following [**link**](https://huggingface.co/bert-large-uncased-whole-word-masking-finetuned-squad/tree/main) |
 
-| INSTALLATIONS: Please have the following libraries installed *torch*, *transformers*,*PyPDF2*|
+| INSTALLATIONS: Please have the following libraries installed **torch**, **transformers**, **PyPDF2** |
 
 
 To search for an answer to a question from a PDF, use the `searchAnswerPDF.py` code.
