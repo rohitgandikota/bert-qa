@@ -23,7 +23,24 @@ model_path='D:\\Projects\\bhoonidhi\\'
 
 <hr>
 
-The code for `searchAnswerText.py` is explained in detail below:
+To use the `searchAnswerText.py`, the following parameters have to be tweeked as per your application.
+```
+# The question that you want to ask
+question = 'What is life expectancy of kompsat-3?'
+# The text that you wish to take as context
+text = '''KOMPSAT-3 is a high performance remote sensing satellite, which provides 0.7 m GSD
+    panchromatic image and 2.8 m GSD multi-spectral image data for various applications.
+    KOMPSAT-3 was launched into a sun synchronous low Earth orbit on the 18th of May, 2012
+    and the life time of more than 7 years is expected.'''
+# The parent path of the working directory where the folder containing model files is present
+model_path='D:\\Projects\\bhoonidhi\\'
+```
+
+<hr>
+
+## Code Walkthrough
+
+The base code for this project is explained in detail below:
 
 ### Importing the huggingface helpers
 ```
